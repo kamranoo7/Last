@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="x">Low to High</button>
+  </select>
+    <div id="box"></div>
+    <button id="buttons"></button>
+    <div id="result"></div>
+    
+</body>
+</html>
+<script>
+  
+  
+  let getdata=async(page)=>{
+    fetch(`http://localhost:3000/pitches`)
+    .then((res) => res.json())
+    .then((data) => Show(data));
+
+  }
+  getdata()
+document.getElementById("x").addEventListener("click",Sort)
+async function Sort(){
+  let res=await fetch(`http://localhost:3000/pitches`)
+  let data=await res.json()
+  let x=data.filter((el)=>{
+    return el.category==="Electronics"
+  })
+  Show(x)
+}
+
+ 
+ 
+  function Show(data){
+    document.getElementById("box").innerHTML=""
+data.forEach((el)=>{
+  let box1=document.createElement('div')
+  let h1=document.createElement("h1")
+  h1.innerHTML=el.title
+  let p=document.createElement('p')
+  p.innerText=el.category
+  box1.append(h1,p)
+  document.getElementById("box").append(box1)
+
+})
+  }
+  let showbuttons=(result,perpage)=>{
+    //let result=10;
+    //let perpage=2;
+    let buttons=Math.ceil(result/perpage);
+    for(let i=1;i<=buttons;i++){
+        let button=document.createElement("button")
+        button.innerText=i
+    button.onclick=function(){
+       getdata(i)
+    }
+    document.getElementById("buttons").append(button)
+    }
+}
+showbuttons(10,2)
+</script>
